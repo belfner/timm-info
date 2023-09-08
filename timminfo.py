@@ -1,5 +1,5 @@
 import math
-from typing import Tuple
+from typing import List, Tuple
 
 import click
 import timm
@@ -11,11 +11,7 @@ def cli():
     pass
 
 
-@click.command(help='Search for timm models')
-@click.argument('name_pattern', type=str)
-@click.option('-p', '--pretrained', is_flag=True, help='Only show pretrained models')
-@click.option('-s', '--simple', is_flag=True, help='Display results in simple format (useful for chaining I/O')
-def search(name_pattern: str, pretrained: bool = False, simple: bool = False) -> None:
+def search_and_print(name_pattern: str, pretrained: bool = False, simple: bool = False) -> None:
     model_names = timm.list_models(name_pattern, pretrained=pretrained)
     if len(model_names) == 0:
         if pretrained:
@@ -34,6 +30,19 @@ def search(name_pattern: str, pretrained: bool = False, simple: bool = False) ->
         num_width = int(math.log10(len(model_names)) + 1)
         for i, model_name in enumerate(model_names):
             click.echo(f'{str(i).rjust(num_width)}. {model_name}')
+
+
+@click.command(help='Search for timm models. Multiple patterns can be passed.')
+@click.argument('name_pattern', type=str, nargs=-1)
+@click.option('-p', '--pretrained', is_flag=True, help='Only show pretrained models')
+@click.option('-s', '--simple', is_flag=True, help='Display results in simple format (useful for chaining I/O')
+def search(name_pattern: List[str], pretrained: bool = False, simple: bool = False) -> None:
+    if len(name_pattern) == 0:
+        click.echo('At least one pattern must be passed\n')
+        exit(3)
+    for pattern in name_pattern:
+        search_and_print(pattern, pretrained, simple)
+        click.echo()
 
 
 def estimate_model_size(model: torch.nn.Module) -> Tuple[int, float]:
@@ -69,18 +78,22 @@ def get_model_info(name: str) -> dict:
     return details
 
 
-@click.command(help='Get information about a particular timm model')
-@click.argument('name', type=str)
-def info(name: str) -> None:
-    details = get_model_info(name)
-    click.echo(f'Model name:                      {details["name"]}')
-    click.echo(f'Number of params:                {details["num_params"]:,}')
-    click.echo(f'Estimated model size:            {details["model_size"]:0.3f} MB')
-    click.echo(f'Number of feature layers:        {details["num_feature_layers"]}')
-    click.echo(f'Number of channels per feature:  {details["num_channels_per_feature"]}')
-    if 'num_channels_per_feature' in details:
-        click.echo(f'Pretrained Input Size: {details["pretrained_input_size"]}')
-    click.echo()
+@click.command(help='Get information about a particular timm model. Multiple names can be passed.')
+@click.argument('name', type=str,nargs=-1)
+def info(name: List[str]) -> None:
+    if len(name) == 0:
+        click.echo('At least one name must be passed\n')
+        exit(3)
+    for model_name in name:
+        details = get_model_info(model_name)
+        click.echo(f'Model name:                      {details["name"]}')
+        click.echo(f'Number of params:                {details["num_params"]:,}')
+        click.echo(f'Estimated model size:            {details["model_size"]:0.3f} MB')
+        click.echo(f'Number of feature layers:        {details["num_feature_layers"]}')
+        click.echo(f'Number of channels per feature:  {details["num_channels_per_feature"]}')
+        if 'num_channels_per_feature' in details:
+            click.echo(f'Pretrained Input Size: {details["pretrained_input_size"]}')
+        click.echo()
 
 
 cli.add_command(search)
