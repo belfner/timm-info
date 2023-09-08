@@ -1,4 +1,5 @@
 import math
+from typing import Tuple
 
 import click
 import timm
@@ -35,7 +36,7 @@ def search(name_pattern: str, pretrained: bool = False, simple: bool = False) ->
             click.echo(f'{str(i).rjust(num_width)}. {model_name}')
 
 
-def estimate_model_size(model):
+def estimate_model_size(model: torch.nn.Module) -> Tuple[int, float]:
     num_params = sum(p.numel() for p in model.parameters())
     memory_consumption = num_params * 4
     size_in_mb = memory_consumption / (1000 * 1000)
@@ -70,7 +71,7 @@ def get_model_info(name: str) -> dict:
 
 @click.command(help='Get information about a particular timm model')
 @click.argument('name', type=str)
-def info(name: str):
+def info(name: str) -> None:
     details = get_model_info(name)
     click.echo(f'Model name:                      {details["name"]}')
     click.echo(f'Number of params:                {details["num_params"]:,}')
