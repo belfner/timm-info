@@ -79,13 +79,25 @@ def get_model_info(name: str) -> dict:
 
 
 @click.command(help='Get information about a particular timm model. Multiple names can be passed.')
-@click.argument('name', type=str,nargs=-1)
+@click.argument('name', type=str, nargs=-1)
 def info(name: List[str]) -> None:
+    encountered_error = False
     if len(name) == 0:
         click.echo('At least one name must be passed\n')
         exit(3)
     for model_name in name:
-        details = get_model_info(model_name)
+        try:
+            if len(timm.list_models(model_name)) == 0:
+                click.echo(f'Unable to find model {repr(model_name)}')
+                click.echo()
+                encountered_error = True
+                continue
+            details = get_model_info(model_name)
+        except Exception:
+            click.echo(f'Something went wrong when getting information about {repr(model_name)}')
+            click.echo()
+            encountered_error = True
+            continue
         click.echo(f'Model name:                      {details["name"]}')
         click.echo(f'Number of params:                {details["num_params"]:,}')
         click.echo(f'Estimated model size:            {details["model_size"]:0.3f} MB')
@@ -94,6 +106,8 @@ def info(name: List[str]) -> None:
         if 'num_channels_per_feature' in details:
             click.echo(f'Pretrained Input Size: {details["pretrained_input_size"]}')
         click.echo()
+
+    exit(int(encountered_error))
 
 
 cli.add_command(search)
