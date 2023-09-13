@@ -35,7 +35,7 @@ def search_and_print(name_pattern: str, pretrained: bool = False, simple: bool =
 @click.command(help='Search for timm models. Multiple patterns can be passed.')
 @click.argument('name_pattern', type=str, nargs=-1)
 @click.option('-p', '--pretrained', is_flag=True, help='Only show pretrained models')
-@click.option('-s', '--simple', is_flag=True, help='Display results in simple format (useful for chaining I/O')
+@click.option('-s', '--simple', is_flag=True, help='Display results in simple format (useful for chaining I/O)')
 def search(name_pattern: List[str], pretrained: bool = False, simple: bool = False) -> None:
     if len(name_pattern) == 0:
         click.echo('At least one pattern must be passed\n')
