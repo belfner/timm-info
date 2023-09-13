@@ -73,7 +73,7 @@ def get_model_info(name: str) -> dict:
     if not can_be_pretrained:
         return details
 
-    details['pretrained_input_size'] = model.pretrained_cfg["input_size"]
+    details['pretrained_input_size'] = model.pretrained_cfg['input_size']
 
     return details
 
