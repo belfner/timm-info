@@ -54,7 +54,15 @@ def estimate_model_size(model: torch.nn.Module) -> Tuple[int, float]:
 
 def get_model_info(name: str) -> dict:
     can_be_pretrained = len(timm.list_models(name, pretrained=True)) > 0
-    model = timm.create_model(name, features_only=True)
+    try:
+        model = timm.create_model(name, features_only=True)
+        has_features = True
+    except RuntimeError:
+        try:
+            model = timm.create_model(name, features_only=False)
+            has_features = False
+        except RuntimeError as e:
+            raise e
     input_size = model.pretrained_cfg.get('input_size', (3, 128, 128))
 
     x = torch.rand(input_size, dtype=torch.float32).unsqueeze(0)
@@ -66,8 +74,9 @@ def get_model_info(name: str) -> dict:
         'name': name,
         'num_params': num_params,
         'model_size': model_size,
-        'num_feature_layers': len(result),
-        'num_channels_per_feature': [tensor.shape[1] for tensor in result],
+        'has_features': has_features,
+        'num_feature_layers': len(result) if has_features else None,
+        'num_channels_per_feature': [tensor.shape[1] for tensor in result] if has_features else None,
 
     }
     if not can_be_pretrained:
@@ -101,6 +110,7 @@ def info(name: List[str]) -> None:
         click.echo(f'Model name:                      {details["name"]}')
         click.echo(f'Number of params:                {details["num_params"]:,}')
         click.echo(f'Estimated model size:            {details["model_size"]:0.3f} MB')
+        click.echo(f'Has extractable features:        {details["has_features"]}')
         click.echo(f'Number of feature layers:        {details["num_feature_layers"]}')
         click.echo(f'Number of channels per feature:  {details["num_channels_per_feature"]}')
         if 'num_channels_per_feature' in details:
