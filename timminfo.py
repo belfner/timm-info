@@ -40,9 +40,12 @@ def search(name_pattern: List[str], pretrained: bool = False, simple: bool = Fal
     if len(name_pattern) == 0:
         click.echo('At least one pattern must be passed\n')
         exit(3)
+
     for pattern in name_pattern:
         search_and_print(pattern, pretrained, simple)
-        click.echo()
+
+        if not simple:
+            click.echo()
 
 
 def estimate_model_size(model: torch.nn.Module) -> Tuple[int, float]:
