@@ -169,17 +169,21 @@ timminfo info convnextv2_atto efficientnet_b0
 Output
 
 ```
-Model name:                      convnextv2_atto
-Number of params:                3,386,760
-Estimated model size:            13.547 MB
-Number of feature layers:        4
-Number of channels per feature:  [40, 80, 160, 320]
-Pretrained Input Size: (3, 224, 224)
+Model name:                            convnextv2_atto
+Number of params:                      3,387,400
+Estimated model size:                  13.550 MB
+Number of in features for classifier:  320
+Has extractable feature layers:        True
+Number of feature layers:              4
+Number of channels per feature:        [40, 80, 160, 320]
+Pretrained Input Size:                 (3, 224, 224)
 
-Model name:                      efficientnet_b0
-Number of params:                3,595,388
-Estimated model size:            14.382 MB
-Number of feature layers:        5
-Number of channels per feature:  [16, 24, 40, 112, 320]
-Pretrained Input Size: (3, 224, 224)
+Model name:                            efficientnet_b0
+Number of params:                      4,007,548
+Estimated model size:                  16.030 MB
+Number of in features for classifier:  1280
+Has extractable feature layers:        True
+Number of feature layers:              5
+Number of channels per feature:        [16, 24, 40, 112, 320]
+Pretrained Input Size:                 (3, 224, 224)
 ```
