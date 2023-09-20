@@ -117,7 +117,8 @@ def get_model_info(name: str) -> dict:
     if has_features:
         input_size = feature_model.pretrained_cfg.get('input_size', (3, 224, 224))
         x = torch.rand([2] + list(input_size), dtype=torch.float32)  # some models expect more than one item per batch
-        result = feature_model(x)
+        with torch.no_grad():
+            result = feature_model(x)
         num_feature_layers = len(result)
         num_channels_per_feature = [tensor.shape[1] for tensor in result]
     else:
