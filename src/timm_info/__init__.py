@@ -1,6 +1,5 @@
 import math
 import warnings
-from typing import List
 from typing import Tuple
 
 import click
@@ -39,7 +38,7 @@ def search_and_print(name_pattern: str, pretrained: bool = False, simple: bool =
 @click.argument('name_pattern', type=str, nargs=-1)
 @click.option('-p', '--pretrained', is_flag=True, help='Only show pretrained models')
 @click.option('-s', '--simple', is_flag=True, help='Display results in simple format (useful for chaining I/O)')
-def search(name_pattern: List[str], pretrained: bool = False, simple: bool = False) -> None:
+def search(name_pattern: list[str], pretrained: bool = False, simple: bool = False) -> None:
     if len(name_pattern) == 0:
         click.echo('At least one pattern must be passed\n')
         exit(3)
@@ -141,7 +140,7 @@ def get_model_info(name: str) -> dict:
 
 @click.command(help='Get information about a particular timm model. Multiple names can be passed.')
 @click.argument('name', type=str, nargs=-1)
-def info(name: List[str]) -> None:
+def info(name: list[str]) -> None:
     if len(name) == 0:
         click.echo('At least one name must be passed\n')
         exit(3)

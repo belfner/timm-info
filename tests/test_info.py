@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 
 from utils import call_timminfo
@@ -13,5 +11,5 @@ def test_help():
                                   ['vgg11'],
                                   ['mobilenetv2_110d'],
                                   ['resnet50', 'vgg11', 'mobilenetv2_110d']])
-def test_get_info(name: List[str]):
+def test_get_info(name: list[str]):
     call_timminfo(['info'] + name)

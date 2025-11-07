@@ -8,3 +8,7 @@
 /build
 /dist
 .idea
+
+# uv
+.venv/
+uv.lock

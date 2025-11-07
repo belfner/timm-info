@@ -1,6 +1,7 @@
 import subprocess as sp
-from typing import List
 
 
-def call_timminfo(args: List[str] = []) -> None:
+def call_timminfo(args: list[str] | None = None) -> None:
+    if args is None:
+        args = []
     sp.check_call(['timminfo'] + args, stderr=sp.DEVNULL, stdout=sp.DEVNULL)

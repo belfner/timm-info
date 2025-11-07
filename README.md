@@ -1,11 +1,44 @@
 timm-info
 =========
 
+A utility for exploring and analyzing PyTorch Image Models (timm).
+
 ## Installation
+
+### Using uv (recommended)
+
+```shell
+uv add timm-info
+```
+
+### Using pip
 
 ```shell
 pip install timm-info
 ```
+
+## Development Setup
+
+Clone the repository and set up your development environment:
+
+```shell
+git clone https://github.com/belfner/timm-info.git
+cd timm-info
+uv sync
+uv run timminfo --help
+```
+
+Run tests:
+
+```shell
+uv run pytest
+```
+
+## Requirements
+
+- Python 3.10+
+- PyTorch 2.0+
+- timm 0.9.0+
 
 ## Usage
 
