@@ -12,3 +12,6 @@
 # uv
 .venv/
 uv.lock
+
+# local secrets
+.env

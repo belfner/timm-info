@@ -1,13 +1,18 @@
-.PHONY: build test upload-test upload
+.PHONY: build test publish publish-test clean
 
 build:
-	python setup.py sdist bdist_wheel
+	uv build
 
 test:
 	pytest -n auto
 
-upload-test:
-	python -m twine upload --repository testpypi dist/* --verbose
+publish: clean build
+	@set -a && . ./.env && set +a && uv publish
 
-upload:
-	python -m twine upload dist/*
+publish-test: clean build
+	@set -a && . ./.env && set +a && uv publish \
+		--publish-url https://test.pypi.org/legacy/ \
+		--token "$$UV_PUBLISH_TOKEN_TESTPYPI"
+
+clean:
+	rm -rf dist/
